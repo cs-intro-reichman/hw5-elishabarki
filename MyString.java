@@ -42,14 +42,17 @@ public class MyString {
      * @return true is str1 is a subset of str2, false otherwise
      */
     public static boolean subsetOf(String str1, String str2) {
-        for (int i = 0; i < str2.length(); i++) {
-            for (int k = 0; k < str2.length(); k++) {
-                if (str1.charAt(i) == str2.charAt(k)) {
-                    str2 = str2.substring(0, i)+str2.substring(i+1);
+        for (int i = 0; i < str1.length(); i++) {
+            boolean found = false;
+            for (int j = 0; j < str2.length(); j++) {
+                if (str1.charAt(i) == str2.charAt(j)) {
+                    str2 = str2.substring(0, j) + '-' + str2.substring(j + 1);
+                    found = true;
                     break;
-                } else if (k == str2.length()-1) {
-                    return false;
                 }
+            }
+            if (!found) {
+                return false;
             }
         }
         return true;
@@ -101,7 +104,7 @@ public class MyString {
      * @return a string consisting of str1 minus all the characters of str2
      */
     public static String remove(String str1, String str2) {
-        for (int i = 0; i < str2.length(); i++) {
+        for (int i = 0; i < str1.length(); i++) {
             for (int k = 0; k < str2.length(); k++) {
                 if (str1.charAt(i) == str2.charAt(k)) {
                     str2 = str2.substring(0, i)+str2.substring(i+1);
