@@ -104,16 +104,19 @@ public class MyString {
      * @return a string consisting of str1 minus all the characters of str2
      */
     public static String remove(String str1, String str2) {
+        String result = "";
+    
         for (int i = 0; i < str1.length(); i++) {
-            for (int k = 0; k < str2.length(); k++) {
-                if (str1.charAt(i) == str2.charAt(k)) {
-                    str2 = str2.substring(0, i)+str2.substring(i+1);
-                    break;
-                }
+            char currentChar = str1.charAt(i);
+            if (str2.indexOf(currentChar) == -1) {
+                result += currentChar;
+            } else {
+                str2 = str2.replaceFirst(String.valueOf(currentChar), "");
             }
         }
-        return str2;
+        return result;
     }
+    
 
     /**
      * Returns a string consisting of the given string, with the given 
