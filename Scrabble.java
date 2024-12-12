@@ -1,3 +1,4 @@
+
 /*
  * RUNI version of the Scrabble game.
  */
@@ -48,7 +49,11 @@ public class Scrabble {
 
 	// Checks if the given word is in the dictionary.
 	public static boolean isWordInDictionary(String word) {
-		//// Replace the following statement with your code
+		for (int i = 0; i < NUM_OF_WORDS; i++) {
+            if (word.equals(DICTIONARY[i])) {
+                return true;
+            }
+        }
 		return false;
 	}
 	
@@ -56,16 +61,25 @@ public class Scrabble {
 	// If the length of the word equals the length of the hand, adds 50 points to the score.
 	// If the word includes the sequence "runi", adds 1000 points to the game.
 	public static int wordScore(String word) {
-		//// Replace the following statement with your code
-		return 0;
+        int score = 0;
+		for (int i = 0; i < word.length(); i++) {
+            int index = (int) word.charAt(i) - 97; // wow! im so smart
+            score += SCRABBLE_LETTER_VALUES[index]; 
+        }
+        score *= word.length();
+        score = (word.length() == HAND_SIZE) ? score + 50 : score;
+        score = (MyString.subsetOf("runi", word)) ? score + 1000 : score; // look at how good i am at coding
+		return score;
 	}
 
 	// Creates a random hand of length (HAND_SIZE - 2) and then inserts
 	// into it, at random indexes, the letters 'a' and 'e'
 	// (these two vowels make it easier for the user to construct words)
 	public static String createHand() {
-		//// Replace the following statement with your code
-		return null;
+		String hand = MyString.randomStringOfLetters(HAND_SIZE - 2);
+        hand = MyString.insertRandomly('a', hand);
+        hand = MyString.insertRandomly('e', hand);
+		return hand;
 	}
 	
     // Runs a single hand in a Scrabble game. Each time the user enters a valid word:
@@ -85,8 +99,7 @@ public class Scrabble {
 			// non-whitespace characters. Whitespace is either space characters, or  
 			// end-of-line characters.
 			String input = in.readString();
-			//// Replace the following break statement with code
-			//// that completes the hand playing loop
+			
 			break;
 		}
 		if (hand.length() == 0) {
