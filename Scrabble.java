@@ -18,7 +18,7 @@ public class Scrabble {
     }
 
     public static boolean isWordInDictionary(String word) {
-        if (!(word instanceof String) || word.length() == 0) {
+        if (word == null || word.length() == 0) {
             return false;
         }
         for (int i = 0; i < NUM_OF_WORDS; i++) {
@@ -49,7 +49,6 @@ public class Scrabble {
     }
 
     public static void playHand(String hand) {
-        int n = hand.length();
         int score = 0;
         In in = new In();
         while (hand.length() > 0) {
@@ -57,12 +56,12 @@ public class Scrabble {
             System.out.println("Enter a word, or '.' to finish playing this hand:");
             String input = in.readString();
 
-            if (input.equals(".")) {
+            if (".".equals(input)) {
                 break;
             }
             if (MyString.subsetOf(input, hand)) {
                 if (isWordInDictionary(input)) {
-                    hand = MyString.remove(input, hand);
+                    hand = MyString.remove(hand, input);
                     int points = wordScore(input);
                     score += points;
                     System.out.println(input + " earned " + points + " points. Score: " + score + " points");
@@ -86,10 +85,10 @@ public class Scrabble {
         while (true) {
             System.out.println("Enter n to deal a new hand, or e to end the game:");
             String input = in.readString();
-            if (input.equals("n")) {
+            if ("n".equals(input)) {
                 playHand(createHand());
             }
-            if (input.equals("e")) {
+            if ("e".equals(input)) {
                 break;
             }
         }
