@@ -57,12 +57,13 @@ public class Scrabble {
     public static void playHand(String hand) {
         int score = 0;
         Scanner scanner = new Scanner(System.in);
-        while (!hand.isEmpty()) {
+        while (true) {
             System.out.println("Current Hand: " + MyString.spacedString(hand));
             System.out.println("Enter a word, or '.' to finish playing this hand:");
             String input = scanner.nextLine().trim();
 
             if (".".equals(input)) {
+                System.out.println("End of hand. Total score: " + score + " points.");
                 break;
             }
 
@@ -81,11 +82,9 @@ public class Scrabble {
 
             if (hand.isEmpty()) {
                 System.out.println("Ran out of letters. Total score: " + score + " points.");
-                return;
+                break;
             }
         }
-
-        System.out.println("End of hand. Total score: " + score + " points.");
     }
 
     public static void playGame() {
