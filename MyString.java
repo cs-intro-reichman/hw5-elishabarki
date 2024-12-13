@@ -1,9 +1,5 @@
 public class MyString {
-    public static void main(String[] args) {
-        String hello = "hello";
-        System.out.println(countChar(hello, 'h'));
-        System.out.println(countChar(hello, 'l'));
-    }
+
 
         public static boolean subsetOf(String str1, String str2) {
             StringBuilder str2Builder = new StringBuilder(str2);
