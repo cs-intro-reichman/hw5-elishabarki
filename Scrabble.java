@@ -1,69 +1,93 @@
-import java.util.Scanner;
-
 public class Scrabble {
-
-    private static final int HAND_SIZE = 7;
-    private MyString hand;
-
-    public Scrabble(String hand) {
-        this.hand = new MyString(hand);
+    static final String WORDS_FILE = "dictionary.txt";
+    static final int[] SCRABBLE_LETTER_VALUES = { 1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10 };
+    static int HAND_SIZE = 10;
+    static int MAX_NUMBER_OF_WORDS = 100000;
+    static String[] DICTIONARY = new String[MAX_NUMBER_OF_WORDS];
+    static int NUM_OF_WORDS;
+    public static void init() {
+        In in = new In(WORDS_FILE);
+        System.out.println("Loading word list from file...");
+        NUM_OF_WORDS = 0;
+        while (!in.isEmpty()) {
+            DICTIONARY[NUM_OF_WORDS++] = in.readString().toLowerCase();
+        }
+        System.out.println(NUM_OF_WORDS + " words loaded.");
     }
 
-    // Calculates the score of a given word based on letter values
-    public int wordScore(String word) {
+    public static boolean isWordInDictionary(String word) {
+		if (word == null || word.length() == 0) {
+            return false;
+        }
+        for (int i = 0; i < NUM_OF_WORDS; i++) {
+            if (word.equals(DICTIONARY[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public static int wordScore(String word) {
         int score = 0;
-        for (char c : word.toCharArray()) {
-            score += Character.toLowerCase(c) - 'a' + 1;
+        for (int i = 0; i < word.length(); i++) {
+            int index = (int) word.charAt(i) - 97;
+            score += SCRABBLE_LETTER_VALUES[index];
         }
-        // Bonus points for words containing "runi"
-        if (word.contains("runi")) {
-            score += 1000;
-        }
-        // Bonus points for using all letters in the hand
-        if (word.length() == HAND_SIZE) {
-            score += 50;
-        }
+        score *= word.length();
+        score = (word.length() == HAND_SIZE) ? score + 50 : score;
+        score = (MyString.subsetOf("runi", word)) ? score + 1000 : score;
         return score;
     }
+    public static String createHand() {
+        String hand = MyString.randomStringOfLetters(HAND_SIZE - 2);
+        hand = MyString.insertRandomly('a', hand);
+        hand = MyString.insertRandomly('e', hand);
+        return hand;
+    }
 
-    // Plays a Scrabble hand, prompting the user for input
-    public void playHand() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            // Displays the current hand to the user
-            System.out.println("Your hand: " + hand);
-            System.out.print("Enter a word (or '.' to quit): ");
-            String word = scanner.nextLine();
-
-            // Exits the game loop if the user enters '.'
-            if (".".equals(word)) {
+    public static void playHand(String hand) {
+		int score = 0;
+        In in = new In();
+        while (hand.length() > 0) {
+            System.out.println("Current Hand: " + MyString.spacedString(hand));
+            System.out.println("Enter a word, or '.' to finish playing this hand:");
+            String input = in.readString();
+			if (".".equals(input)) {
                 break;
             }
-
-            // Validates that the word can be formed with the current hand
-            MyString wordStr = new MyString(word);
-            if (!wordStr.subsetOf(hand)) {
-                System.out.println("Invalid word: Not all letters are in your hand.");
-                continue;
+            if (MyString.subsetOf(input, hand)) {
+                if (isWordInDictionary(input)) {
+					hand = MyString.remove(hand, input);
+                    int points = wordScore(input);
+                    score += points;
+                    System.out.println(input + " earned " + points + " points. Score: " + score + " points");
+                } else {
+                    System.out.println("No such word in the dictionary. Try again.");
+                }
+            } else {
+                System.out.println("Invalid word. Try again.");
             }
-
-            // Calculates and displays the score for the word
-            int score = wordScore(word);
-            System.out.println("Word score: " + score);
-            hand.remove(wordStr);
-
-            // Checks if the hand is empty after the word is used
-            if (hand.toString().isEmpty()) {
-                System.out.println("Congratulations! You've used all the letters in your hand.");
+        }
+        if (hand.length() == 0) {
+            System.out.println("Ran out of letters. Total score: " + score + " points");
+        } else {
+            System.out.println("End of hand. Total score: " + score + " points");
+        }
+    }
+    public static void playGame() {
+        init();
+        In in = new In();
+        while (true) {
+            System.out.println("Enter n to deal a new hand, or e to end the game:");
+            String input = in.readString();
+			if ("n".equals(input)) {
+                playHand(createHand());
+            }
+			if ("e".equals(input)) {
                 break;
             }
         }
-        scanner.close();
     }
-
-    // Main method to start the game
     public static void main(String[] args) {
-        Scrabble scrabble = new Scrabble("runiabc");
-        scrabble.playHand();
+        playGame();
     }
 }

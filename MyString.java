@@ -1,39 +1,59 @@
-// MyString.java
 public class MyString {
-
-    private String data;
-
-    public MyString(String data) {
-        this.data = data;
+    public static void main(String[] args) {
+        String hello = "hello";
+        System.out.println(countChar(hello, 'h'));
+        System.out.println(countChar(hello, 'l'));
     }
 
-    // Checks if the current MyString is a subset of another MyString
-    public boolean subsetOf(MyString other) {
-        String temp = other.data;
-        for (char c : this.data.toCharArray()) {
-            int index = temp.indexOf(c);
+        public static boolean subsetOf(String str1, String str2) {
+            StringBuilder str2Builder = new StringBuilder(str2);
+            for (int i = 0; i < str1.length(); i++) {
+                int index = str2Builder.indexOf(String.valueOf(str1.charAt(i)));
             if (index == -1) {
                 return false;
             }
-            temp = temp.substring(0, index) + temp.substring(index + 1);
+            str2Builder.setCharAt(index, '-');
         }
         return true;
     }
 
-    // Removes the characters in another MyString from the current MyString
-    public void remove(MyString other) {
-        StringBuilder temp = new StringBuilder(this.data);
-        for (char c : other.data.toCharArray()) {
-            int index = temp.indexOf(String.valueOf(c));
-            if (index != -1) {
-                temp.deleteCharAt(index);
+    public static String spacedString(String str) {
+        if (str == null || str.isEmpty()) {
+            return "";
+        }
+        StringBuilder spaced = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            spaced.append(str.charAt(i));
+            if (i < str.length() - 1) {
+                spaced.append(" ");
             }
         }
-        this.data = temp.toString();
+        return spaced.toString();
     }
 
-    // Returns the string representation of the MyString
-    public String toString() {
-        return this.data;
+    public static String randomStringOfLetters(int n) {
+        StringBuilder randomLetters = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            int index = (int) (Math.random() * 26);
+            randomLetters.append("abcdefghijklmnopqrstuvwxyz".charAt(index));
+        }
+        return randomLetters.toString();
+    }
+
+    public static String remove(String str1, String str2) {
+        StringBuilder result = new StringBuilder(str1);
+        for (int i = 0; i < str2.length(); i++) {
+            char ch = str2.charAt(i);
+            int index = result.indexOf(String.valueOf(ch));
+            if (index != -1) {
+                result.deleteCharAt(index);
+            }
+        }
+        return result.toString();
+    }
+
+    public static String insertRandomly(char ch, String str) {
+        int randomIndex = (int) (Math.random() * (str.length() + 1));
+        return str.substring(0, randomIndex) + ch + str.substring(randomIndex);
     }
 }
